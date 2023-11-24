@@ -3,6 +3,7 @@ import threading
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.clock import Clock
 from kivymd.app import MDApp
 import json
 import requests
@@ -20,7 +21,11 @@ class SplashScreen(Screen):
 # Definindo a classe da tela SecondScreen
 class SecondScreen(Screen):
     def update_data(self, dados_empresa):
-        # Atualizar os widgets com os dados obtidos
+        """
+        Atualiza os widgets com os dados obtidos da empresa.
+
+        :param dados_empresa: Dados da empresa a serem exibidos.
+        """
         self.ids.simbolo_label.text = f"CODIGO: {dados_empresa['simbolo']}"
         self.ids.nome_label.text = f"Nome Completo: {dados_empresa['nome_completo']}"
         self.ids.cotacao_label.text = f"Cotação: R$ {dados_empresa['cotacao']}"
@@ -59,6 +64,13 @@ class HealthApp(MDApp):
     def perform_background_task(self):
         # Adicione sua lógica de tarefa de segundo plano aqui
         print("Background task is running.")
+        # Simulando uma tarefa demorada
+        Clock.schedule_once(self.simulate_long_running_task, 2)
+
+    def simulate_long_running_task(self, dt):
+        # Atualiza a interface do usuário após a conclusão da tarefa demorada
+        print("Background task completed.")
+        self.sm.current = 'second'  # Simulando a transição para a segunda tela
 
     def search_company(self, query):
         # Carregue o JSON

@@ -1,7 +1,10 @@
+# Adicione comentários descritivos para explicar a função de seções específicas
+
 <SplashScreen>:
-    name: 'splash'    
+    name: 'splash'
     MDFloatLayout:
-        md_bg_color: 173/255, 216/255, 230/255, 1  # Cor "azul bebê"
+        # Use constantes para as cores
+        md_bg_color: [28/255, 20/255, 53/255, 1]  # Cor de fundo
 
         Image:
             source: "images/docs2.png"
@@ -9,7 +12,7 @@
             pos_hint: {"center_x": .50, "center_y": .75}
             canvas.before:
                 Color:
-                    rgb: 1, .85, .825, 1
+                    rgba: [28/255, 20/255, 53/255, 1]  # Cor de fundo
 
         MDTextField:
             id: search_input
@@ -17,42 +20,47 @@
             pos_hint: {"center_x": 0.5, "center_y": .40}
             size_hint_x: 0.8
             on_text_validate: app.search_company(self.text)
+            line_color_normal: [109/255, 40/255, 217/255, 1]  # Cor da linha
+            mode: "rectangle"  # Modo retangular
+            theme_text_color: "Custom"
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
 
         MDRaisedButton:
-            text: "Clique-me"
+            text: "Pesquisar"
+            elevation_normal: 0
+            pos_hint: {"center_x": .5, "center_y": .25}
+            md_bg_color: [28/255, 20/255, 53/255, 1]  # Cor do botão
             on_release:
                 app.search_company(search_input.text)
-            pos_hint: {"center_x": .5, "center_y": .18}
-            
+
         MDLabel:
-            text: "YouFin"   
-            pos_hint: {"center_x": .5, "center_y": .57}       
+            text: "YouFin"
+            pos_hint: {"center_x": .5, "center_y": .57}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: 0, 0, 0
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
             font_size: "30sp"
             font_name: "Poppins-SemiBold.ttf"
 
         MDLabel:
-            text: "Monitore suas ações"   
-            pos_hint: {"center_x": .5, "center_y": .50}       
+            text: "Monitore suas ações"
+            pos_hint: {"center_x": .5, "center_y": .50}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: 0, 0, 0 
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
             font_size: "13sp"
-
 
 <SecondScreen>:
     name: 'second'
     MDFloatLayout:
-        md_bg_color: 173/255, 216/255, 230/255, 1  # Cor "azul bebê"
-        
+        md_bg_color: [28/255, 20/255, 53/255, 1]  # Cor de fundo
+
         MDLabel:
             id: simbolo_label
             pos_hint: {"center_x": .15, "center_y": .65}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: 0, 0, 0
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
             font_size: "13sp"
 
         MDLabel:
@@ -60,7 +68,7 @@
             pos_hint: {"center_x": .5, "center_y": .93}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: 0, 0, 0
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
             font_size: "18sp"
 
         MDLabel:
@@ -68,7 +76,7 @@
             pos_hint: {"center_x": .65, "center_y": .80}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: 0, 0, 0
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
             font_size: "30sp"
 
         MDLabel:
@@ -76,7 +84,7 @@
             pos_hint: {"center_x": .65, "center_y": .75}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: 0, 0, 0
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
             font_size: "13sp"
 
         MDLabel:
@@ -84,12 +92,24 @@
             pos_hint: {"center_x": .5, "center_y": .10}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: 0, 0, 0
+            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
             font_size: "13sp"
-        
-        SmartTileWithLabel:
+
+        Image:
             id: logo_image
-            source: root.ids.logo_image.source  # Usar a propriedade source diretamente
-            size_hint: None, None  # Remover as dicas de tamanho
-            size: dp(100), dp(100)  # Definir o tamanho desejado em Density-independent Pixels (dp)
+            source: root.ids.logo_image.source
+            size_hint: None, None
+            size: dp(100), dp(100)
             pos_hint: {"center_x": .15, "center_y": .80}
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: (0.8, 0.4)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            Chart:
+                id: chart_widget
+                x_labels: [1, 2, 3, 4, 5]
+                y_values: [10, 12, 8, 15, 7]
+                xlabel: 'X-axis'
+                ylabel: 'Y-axis'
