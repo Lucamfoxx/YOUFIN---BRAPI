@@ -1,0 +1,29 @@
+import requests
+
+def obter_cotacao(ticker):
+    # Construir a URL com o endpoint de cotação para um ticker específico
+    url = f"https://brapi.dev/api/quote/{ticker}?token=4Rgd828GN7h8cLkUrxP1gK"
+
+    # Fazer a solicitação HTTP
+    response = requests.get(url)
+
+    # Verificar o código de status da resposta
+    if response.status_code == 200:
+        # Se a solicitação foi bem-sucedida, imprimir a cotação se disponível
+        dados = response.json()
+        cotacao = dados['results'][0]['regularMarketPrice']
+        if cotacao is not None:
+            print(f"Cotação de {ticker}: {cotacao}")
+        else:
+            print(f"Cotação de {ticker} não disponível no momento.")
+    else:
+        # Se houve um erro na solicitação, imprimir a mensagem de erro
+        erro = response.json()
+        print(f"Erro na solicitação: {erro['message']}")
+        
+        
+# Substitua 'bbdc4' pelo ticker da ação desejada
+ticker_escolhido = 'PETR4'
+
+# Chamar a função para obter a cotação do ticker escolhido
+obter_cotacao(ticker_escolhido)

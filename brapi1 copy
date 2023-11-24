@@ -1,0 +1,38 @@
+import os
+import requests
+
+def obter_tickers_disponiveis(token):
+    # Construir a URL com o endpoint para obter a lista de tickers disponíveis
+    url = f"https://brapi.dev/api/available?token={token}"
+
+    # Fazer a solicitação HTTP
+    response = requests.get(url)
+
+    # Verificar o código de status da resposta
+    if response.status_code == 200:
+        # Se a solicitação foi bem-sucedida, obter a lista de tickers
+        dados = response.json()
+        tickers = dados.get('stocks', [])
+
+        # Caminho absoluto para o arquivo de texto
+        caminho_arquivo = os.path.abspath('tickers_disponiveis.txt')
+
+        # Salvar a lista de tickers em um arquivo de texto
+        with open(caminho_arquivo, 'w') as file:
+            if tickers:
+                for ticker in tickers:
+                    file.write(ticker + '\n')
+                print(f"Lista de tickers salva em '{caminho_arquivo}'")
+            else:
+                file.write("Nenhum ticker disponível.")
+                print(f"Nenhum ticker disponível. Arquivo vazio criado em '{caminho_arquivo}'")
+    else:
+        # Se houve um erro na solicitação, imprimir a mensagem de erro
+        erro = response.json()
+        print(f"Erro na solicitação: {erro.get('message', 'Erro desconhecido')}")
+
+# Substitua 'seu_token_aqui' pelo seu token de autenticação real
+token = 'eJGEyu8vVHctULdVdHYzQd'
+
+# Chamar a função para obter a lista de tickers disponíveis e salvar em um arquivo de texto
+obter_tickers_disponiveis(token)

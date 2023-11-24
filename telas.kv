@@ -1,0 +1,95 @@
+<SplashScreen>:
+    name: 'splash'    
+    MDFloatLayout:
+        md_bg_color: 173/255, 216/255, 230/255, 1  # Cor "azul bebê"
+
+        Image:
+            source: "images/docs2.png"
+            size_hint: .60, .60
+            pos_hint: {"center_x": .50, "center_y": .75}
+            canvas.before:
+                Color:
+                    rgb: 1, .85, .825, 1
+
+        MDTextField:
+            id: search_input
+            hint_text: "Ação/Empresa"
+            pos_hint: {"center_x": 0.5, "center_y": .40}
+            size_hint_x: 0.8
+            on_text_validate: app.search_company(self.text)
+
+        MDRaisedButton:
+            text: "Clique-me"
+            on_release:
+                app.search_company(search_input.text)
+            pos_hint: {"center_x": .5, "center_y": .18}
+            
+        MDLabel:
+            text: "YouFin"   
+            pos_hint: {"center_x": .5, "center_y": .57}       
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0
+            font_size: "30sp"
+            font_name: "Poppins-SemiBold.ttf"
+
+        MDLabel:
+            text: "Monitore suas ações"   
+            pos_hint: {"center_x": .5, "center_y": .50}       
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0 
+            font_size: "13sp"
+
+
+<SecondScreen>:
+    name: 'second'
+    MDFloatLayout:
+        md_bg_color: 173/255, 216/255, 230/255, 1  # Cor "azul bebê"
+        
+        MDLabel:
+            id: simbolo_label
+            pos_hint: {"center_x": .15, "center_y": .65}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0
+            font_size: "13sp"
+
+        MDLabel:
+            id: nome_label
+            pos_hint: {"center_x": .5, "center_y": .93}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0
+            font_size: "18sp"
+
+        MDLabel:
+            id: cotacao_label
+            pos_hint: {"center_x": .65, "center_y": .80}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0
+            font_size: "30sp"
+
+        MDLabel:
+            id: preco_anterior_label
+            pos_hint: {"center_x": .65, "center_y": .75}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0
+            font_size: "13sp"
+
+        MDLabel:
+            id: volume_label
+            pos_hint: {"center_x": .5, "center_y": .10}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0
+            font_size: "13sp"
+        
+        SmartTileWithLabel:
+            id: logo_image
+            source: root.ids.logo_image.source  # Usar a propriedade source diretamente
+            size_hint: None, None  # Remover as dicas de tamanho
+            size: dp(100), dp(100)  # Definir o tamanho desejado em Density-independent Pixels (dp)
+            pos_hint: {"center_x": .15, "center_y": .80}

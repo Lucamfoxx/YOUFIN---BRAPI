@@ -1,0 +1,33 @@
+ScreenManager:
+    SplashScreen:
+
+
+<SplashScreen>:
+    name: 'splash'    
+    MDFloatLayout:
+        md_bg_color: 173/255, 216/255, 230/255, 1  # Cor "azul bebê"
+        Image:
+            source: "images/docs2.png"
+            size_hint: .50, .50
+            pos_hint: {"center_x": .50, "center_y": .50}
+            canvas.before:
+                Color:
+                    rgb: 1, .85, .825, 1
+        
+        MDLabel:
+            text: "YouFit"   
+            pos_hint: {"center_x": .5, "center_y": .28}       
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0
+            font_size:"35sp"
+            font_name: "Poppins-SemiBold.ttf"
+
+        MDLabel:
+            text: "Sua saúde a um toque de distância"   
+            pos_hint: {"center_x": .5, "center_y": .21}       
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 0, 0, 0 
+            font_size:"13sp"
+            font_name: "Poppins-Regular.ttf"
