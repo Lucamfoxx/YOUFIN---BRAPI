@@ -1,115 +1,227 @@
-# Adicione comentários descritivos para explicar a função de seções específicas
-
 <SplashScreen>:
     name: 'splash'
     MDFloatLayout:
-        # Use constantes para as cores
-        md_bg_color: [28/255, 20/255, 53/255, 1]  # Cor de fundo
+    
+        AsyncImage:
+            source: 'images/bg.png'
+            pos: self.pos
+            size: self.size
+            allow_stretch: True  # Permitir esticar a imagem para preencher o widget
+            keep_ratio: False   # Não manter a proporção original ao esticar
 
         Image:
-            source: "images/docs2.png"
-            size_hint: .60, .60
-            pos_hint: {"center_x": .50, "center_y": .75}
-            canvas.before:
-                Color:
-                    rgba: [28/255, 20/255, 53/255, 1]  # Cor de fundo
+            source: "images/logo.png"
+            size_hint: 0.6, 0.6
+            pos_hint: {"center_x": 0.5, "center_y": 0.75}
 
         MDTextField:
             id: search_input
-            hint_text: "Ação/Empresa"
-            pos_hint: {"center_x": 0.5, "center_y": .40}
+            hint_text: "Ações/Empresas"
+            helper_text_mode: "persistent"
+            helper_text_color: [0.5, 0, 0.5, 1]
             size_hint_x: 0.8
-            on_text_validate: app.search_company(self.text)
-            line_color_normal: [109/255, 40/255, 217/255, 1]  # Cor da linha
-            mode: "rectangle"  # Modo retangular
+            font_name: "Poppins-SemiBold.ttf"
+            pos_hint: {"center_x": 0.5, "center_y": 0.4}
             theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
+            text_color: [1, 1, 1, 1]
+            mode: "rectangle"
+            hint_text_color_normal: [109/255, 40/255, 217/255, 1]
+            hint_text_color_focus: [109/255, 40/255, 217/255, 1]
+            line_color_focus: [109/255, 40/255, 217/255, 1]
+            line_color_normal: [109/255, 40/255, 217/255, 1]
+            text_color_focus: "red"
 
-        MDRaisedButton:
+        MDLabel:
+            text: "YouFin"
+            pos_hint: {"center_x": 0.5, "center_y": 0.54}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: [1, 1,1, 1]
+            font_size: self.width * 0.08
+            font_name: "Poppins-SemiBold.ttf"
+
+        MDTextButton:
             text: "Pesquisar"
-            elevation_normal: 0
-            pos_hint: {"center_x": .5, "center_y": .25}
-            md_bg_color: [28/255, 20/255, 53/255, 1]  # Cor do botão
+            pos_hint: {"center_x": .5, "center_y": .3}
+            halign: "center"
+            size_hint: (0.8, 0.1)
+            theme_text_color: "Custom"
+            font_name: "Poppins-SemiBold.ttf"
+            font_size: self.width * 0.04
+            text_color: [1, 1, 1, 1]
+
             on_release:
                 app.search_company(search_input.text)
 
         MDLabel:
-            text: "YouFin"
-            pos_hint: {"center_x": .5, "center_y": .57}
+            text: "Monitore suas ações."
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
-            font_size: "30sp"
-            font_name: "Poppins-SemiBold.ttf"
+            text_color: [1, 1, 1, 0.5]
+            font_size: self.width * 0.020
 
-        MDLabel:
-            text: "Monitore suas ações"
-            pos_hint: {"center_x": .5, "center_y": .50}
-            halign: "center"
-            theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
-            font_size: "13sp"
+        Image:
+            source: "images/estrela.png"
+            size_hint: None, None
+            size: dp(60), dp(60)
+            pos_hint: {"right": 0.99, "top": 0.99}
+
+            on_touch_down:
+                app.favoritos() if self.collide_point(*args[1].pos) else None
+
+
 
 <SecondScreen>:
     name: 'second'
     MDFloatLayout:
-        md_bg_color: [28/255, 20/255, 53/255, 1]  # Cor de fundo
 
-        MDLabel:
-            id: simbolo_label
-            pos_hint: {"center_x": .15, "center_y": .65}
-            halign: "center"
-            theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
-            font_size: "13sp"
-
-        MDLabel:
-            id: nome_label
-            pos_hint: {"center_x": .5, "center_y": .93}
-            halign: "center"
-            theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
-            font_size: "18sp"
-
-        MDLabel:
-            id: cotacao_label
-            pos_hint: {"center_x": .65, "center_y": .80}
-            halign: "center"
-            theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
-            font_size: "30sp"
-
-        MDLabel:
-            id: preco_anterior_label
-            pos_hint: {"center_x": .65, "center_y": .75}
-            halign: "center"
-            theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
-            font_size: "13sp"
-
-        MDLabel:
-            id: volume_label
-            pos_hint: {"center_x": .5, "center_y": .10}
-            halign: "center"
-            theme_text_color: "Custom"
-            text_color: [109/255, 40/255, 217/255, 1]  # Cor do texto
-            font_size: "13sp"
+        AsyncImage:
+            source: 'images/bg.png'
+            pos: self.pos
+            size: self.size
+            allow_stretch: True  # Permitir esticar a imagem para preencher o widget
+            keep_ratio: False   # Não manter a proporção original ao esticar
 
         Image:
             id: logo_image
             source: root.ids.logo_image.source
+            pos_hint: {"center_x": 0.2, "center_y": 0.85}
             size_hint: None, None
-            size: dp(100), dp(100)
-            pos_hint: {"center_x": .15, "center_y": .80}
+            size: dp(100), dp(100)  # Set your desired width and height for the logo
 
+        MDLabel:
+            id: simbolo_label
+            pos_hint: {"center_x": 0.2, "center_y": 0.79}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: [1, 1, 1, 0.8]
+            font_name:"Poppins-SemiBold.ttf"
+            font_size: dp(20)  # Use the dp function for font size
 
-        BoxLayout:
+        MDLabel:
+            id: nome_label
+            pos_hint: {"center_x": 0.5, "center_y": 0.96}
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: [1, 1, 1, 1]
+            font_size: dp(30)
+            bold: True
+
+        MDLabel:
+            id: cotacao_label
+            pos_hint: {"center_x": 0.82, "center_y": 0.85}
+            halign: "left"
+            theme_text_color: "Custom"
+            text_color: [0, 1, 0, 1]
+            font_size: dp(65)
+            bold: True
+
+        MDLabel:
+            id: preco_anterior_label
+            pos_hint: {"center_x": 0.40, "center_y": 0.726}
+            halign: "right"
+            theme_text_color: "Custom"
+            text_color: [1, 1, 1, 1]
+            font_size: dp(12)
+
+        MDLabel:
+            id: volume_label
+            pos_hint: {"center_x": 0.40, "center_y": 0.70}
+            halign: "right"
+            theme_text_color: "Custom"
+            text_color: [1, 1, 1, 1]
+            font_size: dp(12)
+
+        MDTextButton:
+            text: "voltar"
+            pos_hint: {"center_x": .5, "center_y": .09}
+            halign: "center"
+            size_hint: (0.8, 0.1)
+            theme_text_color: "Custom"
+            font_name: "Poppins-SemiBold.ttf"
+            font_size: self.width * 0.04
+            text_color: [1, 1, 1, 1]
+            on_release:
+                root.manager.current = 'splash'
+
+        MDBoxLayout:
             orientation: 'vertical'
-            size_hint: (0.8, 0.4)
+            size_hint: 0.8, 0.5
+            pos_hint: {"center_x": 0.5, "center_y": 0.4}
+            spacing: dp(10)
+            padding: dp(20)
+            md_bg_color: [1, 1, 1, 0.10]
+            radius: [dp(10), dp(10), dp(10), dp(10)]
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.21, 0.15
+            pos_hint: {"center_x": 0.2, "center_y": 0.85}
+            spacing: dp(10)
+            padding: dp(20)
+            md_bg_color: [1, 1, 1, 0.10]
+            radius: [dp(10), dp(10), dp(10), dp(10)]
+
+        Image:
+            id: add_button
+            source: "images/add.png"
+            size_hint: None, None
+            size: dp(40), dp(40)
+            pos_hint: {"right":0.90, "top": 0.85}
+
+            on_touch_down:
+                app.botao_add_clicado() if self.collide_point(*args[1].pos) else None
+
+<ThirdScreen>:
+    name: 'third'
+    MDFloatLayout:
+        AsyncImage:
+            source: 'images/bg.png'
+            pos: self.pos
+            size: self.size
+            allow_stretch: True  # Permitir esticar a imagem para preencher o widget
+            keep_ratio: False   # Não manter a proporção original ao esticar
+
+        MDLabel:
+            text:"Favoritos"
+            pos_hint: {"center_x": 0.50, "center_y": 0.90}
+            halign: "center"
+            font_name: "Poppins-SemiBold.ttf"
+            theme_text_color: "Custom"
+            text_color: [1, 1, 1, 1]
+            font_size: dp(40)
+
+        MDBoxLayout:
+            id: lista_layout
+            orientation: 'vertical'
+            size_hint: 0.8, 0.7
             pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            Chart:
-                id: chart_widget
-                x_labels: [1, 2, 3, 4, 5]
-                y_values: [10, 12, 8, 15, 7]
-                xlabel: 'X-axis'
-                ylabel: 'Y-axis'
+            spacing: dp(10)
+            padding: dp(20)
+            md_bg_color: [1, 1, 1, 0.10]
+            radius: [dp(10), dp(10), dp(10), dp(10)]
+
+
+        MDTextButton:
+            text: "voltar"
+            pos_hint: {"center_x": .5, "center_y": .09}
+            halign: "center"
+            size_hint: (0.8, 0.1)
+            theme_text_color: "Custom"
+            font_name: "Poppins-SemiBold.ttf"
+            font_size: self.width * 0.04
+            text_color: [1, 1, 1, 1]
+            on_release:
+                root.manager.current = 'splash'
+
+
+        MDScrollView:
+            size_hint: (1, 0.6)
+            pos_hint: {"center_x": 0.5, "center_y": 0.45}
+            
+            BoxLayout:
+                id: lista_layout
+                orientation: 'vertical'
+                spacing: dp(10)
+                padding: dp(10)
