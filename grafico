@@ -1,61 +1,43 @@
+from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.image import Image as KivyImage
-from kivymd.app import MDApp
-from kivy.core.image import Image as CoreImage
+from kivy.uix.button import Button
+from kivy.garden.matplotlib import FigureCanvasKivyAgg
 import matplotlib.pyplot as plt
-from io import BytesIO
-import json
-from datetime import datetime
+import numpy as np
 
-
-class GraphWidget(BoxLayout):
-    def __init__(self, **kwargs):
-        super(GraphWidget, self).__init__(**kwargs)
-
-        # Lendo os dados do arquivo JSON
-        with open('cotacoes_formatadas.json', 'r') as file:
-            json_data = json.load(file)
-
-        # Extraindo os dados relevantes do JSON
-        dates = [datetime.utcfromtimestamp(entry['date']).strftime('%Y-%m-%d') for entry in json_data['historicalDataPrice']]
-        closes = [entry['close'] for entry in json_data['historicalDataPrice']]
-
-        # Criando o gráfico
-        fig, ax = plt.subplots()
-        ax.plot(dates, closes, marker='o', linestyle='-', color='b', label='Preço de Fechamento')
-        ax.set_title(f'Gráfico de Linha para {json_data["longName"]}')
-        ax.set_xlabel('Data')
-        ax.set_ylabel('Preço de Fechamento')
-        ax.tick_params(axis='x', rotation=45)
-        ax.legend()
-
-        # Salvando o gráfico como uma imagem
-        buffer = BytesIO()
-        fig.savefig(buffer, format='png', bbox_inches='tight')
-        buffer.seek(0)
-
-        # Criando uma instância de Image com a imagem do gráfico
-        img = CoreImage(BytesIO(buffer.read()), ext='png', filename='graph.png')
-        image_widget = KivyImage(texture=img.texture, size=img.size, size_hint=(None, None))
-
-        # Adicionando a imagem ao layout
-        self.add_widget(image_widget)
-
-
-class GraphApp(MDApp):
+class InteractiveGraphApp(App):
     def build(self):
-        root = BoxLayout(orientation='vertical')
+        box_layout = BoxLayout(orientation='vertical')
 
-        # Adicionando o widget do gráfico
-        graph_widget = GraphWidget()
-        root.add_widget(graph_widget)
+        # Criar dados para o gráfico
+        x = np.linspace(0, 10, 100)
+        y = np.sin(x)
 
-        return root
+        # Criar um subplot do Matplotlib
+        fig, ax = plt.subplots()
+        ax.plot(x, y)
+        ax.set_title('Gráfico Interativo')
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
 
-    def update_graph(self):
-        # Atualize o gráfico conforme necessário
-        pass
+        # Adicionar o gráfico ao layout
+        graph = FigureCanvasKivyAgg(figure=fig)
+        box_layout.add_widget(graph)
 
+        # Adicionar um botão para interatividade
+        button = Button(text='Clique para Zoom')
+        button.bind(on_press=self.zoom_graph)
+        box_layout.add_widget(button)
 
-if __name__ == '__main__':
-    GraphApp().run()
+        return box_layout
+
+    def zoom_graph(self, instance):
+        # Evento de clique para dar zoom
+        ax = self.root.children[0].figure.gca()
+        ax.set_xlim(2, 8)  # Ajuste a escala conforme necessário
+        ax.set_ylim(-1, 1)
+        self.root.children[0].figure.canvas.draw_idle()
+
+# Rodar a aplicação
+if __name__ == "__main__":
+    InteractiveGraphApp().run()

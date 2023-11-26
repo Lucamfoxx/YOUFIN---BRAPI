@@ -299,4 +299,3 @@ class HealthApp(MDApp):
 # Verifica se o código está sendo executado diretamente
 if __name__ == "__main__":
     HealthApp().run()
-    
