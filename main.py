@@ -1,19 +1,30 @@
 import os
+import matplotlib
 import threading
-import kivymd
+import json
+from datetime import datetime
+import matplotlib.pyplot as plt
+from io import BytesIO
+
+
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivymd.app import MDApp
-import json
-import requests
 from kivy.uix.boxlayout import BoxLayout
 from kivy.metrics import dp
 from kivy.uix.label import Label
+from kivymd.app import MDApp
+from kivymd.uix.button import MDIconButton
+from kivy.uix.image import Image as KivyImage
+from kivy.core.image import Image as CoreImage
+import kivymd
+import requests
+
+token = '4Rgd828GN7h8cLkUrxP1gK'
 
 
 # Ajustando o tamanho da janela
-Window.size = (720, 1080)
+Window.size = (460, 720)
 
 # Carregando automaticamente o arquivo KV correspondente
 Builder.load_file("telas.kv")
@@ -39,7 +50,8 @@ class SecondScreen(Screen):
     
 class ThirdScreen(Screen):
     pass
-                    
+
+
 # Definindo a classe principal da aplicação
 class HealthApp(MDApp):
     def build(self):
@@ -154,10 +166,16 @@ class HealthApp(MDApp):
             dados_empresa = self.obter_cotacao(result['codigo'])
 
             if dados_empresa:
+                historico = os.path.join(os.path.dirname(__file__), "historico")
+                
+                # Construindo o caminho completo para o arquivo na pasta "historico"
+                caminho = os.path.join(historico, f"{result['codigo']}.json")
+
                 # Acessar a segunda tela e atualizar os widgets com os dados obtidos
                 self.sm.current = 'second'
                 self.second_screen.update_data(dados_empresa)
-
+                self.obter_cotacoes_por_dia(result['codigo'])
+                self.create_graph_widget(caminho)
     def obter_cotacao(self, code):
         # Construir a URL com o endpoint de cotação para um ticker específico
         url = f"https://brapi.dev/api/quote/{code}?token=4Rgd828GN7h8cLkUrxP1gK"
@@ -197,6 +215,86 @@ class HealthApp(MDApp):
             erro = response.json()
             print(f"Erro na solicitação: {erro['message']}")
             return None
+
+    def obter_cotacoes_por_dia(self, ticker):
+        # Construir o caminho da pasta "historico"
+        historico_folder = os.path.join(os.path.dirname(__file__), "historico")
+
+        # Verificar se a pasta "historico" existe, caso contrário, criar
+        if not os.path.exists(historico_folder):
+            os.makedirs(historico_folder)
+
+        # Construir o caminho completo para o arquivo na pasta "historico"
+        nome_arquivo = os.path.join(historico_folder, f"{ticker}.json")
+
+        # Construir a URL com o endpoint para obter as informações por dia
+        url = f"https://brapi.dev/api/quote/{ticker}?range=3mo&interval=1d&token=4Rgd828GN7h8cLkUrxP1gK"
+
+        try:
+            # Fazer a solicitação HTTP
+            response = requests.get(url)
+
+            # Verificar o código de status da resposta
+            print(f"Código de status: {response.status_code}")
+
+            # Verificar se a solicitação foi bem-sucedida
+            response.raise_for_status()
+
+            # Obter os dados de cotação
+            dados_cotacao = response.json().get('results', [])
+
+            if dados_cotacao:
+                dados_formatados = {
+                    'longName': dados_cotacao[0]['longName'],
+                    'symbol': dados_cotacao[0]['symbol'],
+                    'historicalDataPrice': dados_cotacao[0]['historicalDataPrice']
+                }
+
+                # Construa o caminho completo para o arquivo na pasta "historico"
+                caminho = os.path.join(historico_folder, f"{ticker}.json")
+
+                with open(caminho, 'w', encoding='utf-8') as json_file:
+                    json.dump(dados_formatados, json_file, ensure_ascii=False, indent=4)
+                    print(f"Dados formatados e salvos com sucesso em '{caminho}'.")
+                
+            else:
+                print(f"Falha ao obter as cotações dos últimos 3 meses para {ticker}.")
+        
+        except requests.exceptions.HTTPError as errh:
+            print(f"Erro HTTP: {errh}")
+        except requests.exceptions.ConnectionError as errc:
+            print(f"Erro de conexão: {errc}")
+        except requests.exceptions.Timeout as errt:
+            print(f"Timeout na solicitação: {errt}")
+        except requests.exceptions.RequestException as err:
+            print(f"Erro na solicitação: {err}")
+            
+    def create_graph_widget(self, caminho):
+        with open(caminho, 'r') as file:
+            json_data = json.load(file)
+        
+
+        dates = [datetime.utcfromtimestamp(entry['date']).strftime('%Y-%m-%d') for entry in json_data['historicalDataPrice']]
+        closes = [entry['close'] for entry in json_data['historicalDataPrice']]
+
+        fig, ax = plt.subplots()
+        ax.plot(dates, closes, marker='o', linestyle='-', color='b', label='Preço de Fechamento')
+        ax.set_title(f'Gráfico de Linha para {json_data["longName"]}')
+        ax.set_xlabel('Data')
+        ax.set_ylabel('Preço de Fechamento')
+        ax.tick_params(axis='x', rotation=45)
+        ax.legend()
+
+        buffer = BytesIO()
+        fig.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+
+        img = CoreImage(BytesIO(buffer.read()), ext='png', filename='graph.png')
+        image_widget = KivyImage(texture=img.texture, size=img.size, size_hint=(None, None))
+
+        # Adicione o widget do gráfico diretamente ao graph_layout
+        self.second_screen.ids.graph_layout.add_widget(image_widget)
+
 
 # Verifica se o código está sendo executado diretamente
 if __name__ == "__main__":

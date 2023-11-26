@@ -1,0 +1,56 @@
+import requests
+import json
+
+def obter_cotacoes_por_dia(ticker, token):
+    # Construir a URL com o endpoint para obter as informações por dia
+    url = f"https://brapi.dev/api/quote/{ticker}?range=3mo&interval=1d&token={token}"
+
+    try:
+        # Fazer a solicitação HTTP
+        response = requests.get(url)
+
+        # Verificar o código de status da resposta
+        print(f"Código de status: {response.status_code}")
+
+        # Verificar se a solicitação foi bem-sucedida
+        response.raise_for_status()
+
+        # Obter os dados de cotação
+        dados_cotacao = response.json().get('results', [])
+
+        # Retornar os dados de cotação
+        return dados_cotacao
+
+    except requests.exceptions.HTTPError as errh:
+        print(f"Erro HTTP: {errh}")
+    except requests.exceptions.ConnectionError as errc:
+        print(f"Erro de conexão: {errc}")
+    except requests.exceptions.Timeout as errt:
+        print(f"Timeout na solicitação: {errt}")
+    except requests.exceptions.RequestException as err:
+        print(f"Erro na solicitação: {err}")
+
+    return None
+
+# Substitua 'seu_token_aqui' pela sua chave de autenticação real
+token = '4Rgd828GN7h8cLkUrxP1gK'
+
+# Chamar a função para obter as cotações por dia para a empresa PETR4
+ticker_petroleo = 'PETR4'
+cotacoes_por_dia = obter_cotacoes_por_dia(ticker_petroleo, token)
+
+# Verificar se as cotações foram obtidas com sucesso
+if cotacoes_por_dia:
+    # Extrair as informações desejadas
+    dados_formatados = {
+        'longName': cotacoes_por_dia[0]['longName'],
+        'symbol': cotacoes_por_dia[0]['symbol'],
+        'historicalDataPrice': cotacoes_por_dia[0]['historicalDataPrice']
+    }
+
+    # Salvar os dados formatados em um arquivo JSON
+    with open('cotacoes_formatadas.json', 'w', encoding='utf-8') as json_file:
+        json.dump(dados_formatados, json_file, ensure_ascii=False, indent=4)
+    print(f"Dados formatados e salvos com sucesso em 'cotacoes_formatadas.json'.")
+else:
+    print("Falha ao obter as cotações dos últimos 3 meses.")

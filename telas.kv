@@ -6,8 +6,8 @@
             source: 'images/bg.png'
             pos: self.pos
             size: self.size
-            allow_stretch: True  # Permitir esticar a imagem para preencher o widget
-            keep_ratio: False   # Não manter a proporção original ao esticar
+            allow_stretch: True
+            keep_ratio: False
 
         Image:
             source: "images/logo.png"
@@ -18,40 +18,33 @@
             id: search_input
             hint_text: "Ações/Empresas"
             helper_text_mode: "persistent"
-            helper_text_color: [0.5, 0, 0.5, 1]
+            helper_text_color: [1,1,1, 1]
             size_hint_x: 0.8
-            font_name: "Poppins-SemiBold.ttf"
+            font_name: "GraphikCompact-Medium-Trial.otf"
             pos_hint: {"center_x": 0.5, "center_y": 0.4}
             theme_text_color: "Custom"
             text_color: [1, 1, 1, 1]
             mode: "rectangle"
-            hint_text_color_normal: [109/255, 40/255, 217/255, 1]
-            hint_text_color_focus: [109/255, 40/255, 217/255, 1]
-            line_color_focus: [109/255, 40/255, 217/255, 1]
-            line_color_normal: [109/255, 40/255, 217/255, 1]
-            text_color_focus: "red"
+            hint_text_color_normal: [1,1,1,0.1] 
+            hint_text_color_focus:[1,1,1,0.5]
+            line_color_focus: [49/255, 26/255, 74/255, 1] 
+            line_color_normal: [49/255, 26/255, 74/255, 1] 
+            text_color_focus: "blue"
+
+            # Adicionando o evento on_text_validate
+            on_text_validate:
+                app.search_company(search_input.text)
 
         MDLabel:
             text: "YouFin"
             pos_hint: {"center_x": 0.5, "center_y": 0.54}
             halign: "center"
             theme_text_color: "Custom"
-            text_color: [1, 1,1, 1]
-            font_size: self.width * 0.08
-            font_name: "Poppins-SemiBold.ttf"
-
-        MDTextButton:
-            text: "Pesquisar"
-            pos_hint: {"center_x": .5, "center_y": .3}
-            halign: "center"
-            size_hint: (0.8, 0.1)
-            theme_text_color: "Custom"
-            font_name: "Poppins-SemiBold.ttf"
-            font_size: self.width * 0.04
             text_color: [1, 1, 1, 1]
+            font_size: self.width * 0.08
+            font_name: "GraphikCompact-Medium-Trial.otf"
 
-            on_release:
-                app.search_company(search_input.text)
+        # Remova o MDTextButton de Pesquisar
 
         MDLabel:
             text: "Monitore suas ações."
@@ -71,107 +64,113 @@
                 app.favoritos() if self.collide_point(*args[1].pos) else None
 
 
-
 <SecondScreen>:
     name: 'second'
     MDFloatLayout:
-
         AsyncImage:
             source: 'images/bg.png'
             pos: self.pos
             size: self.size
-            allow_stretch: True  # Permitir esticar a imagem para preencher o widget
-            keep_ratio: False   # Não manter a proporção original ao esticar
-
+            allow_stretch: True
+            keep_ratio: False
         Image:
             id: logo_image
             source: root.ids.logo_image.source
-            pos_hint: {"center_x": 0.2, "center_y": 0.85}
-            size_hint: None, None
-            size: dp(100), dp(100)  # Set your desired width and height for the logo
+            size_hint: 0.18, 0.18
+            allow_stretch: True
+            keep_ratio: True
+            pos_hint: {"center_x": 0.2, "center_y": 0.86}
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint: 1, 0.15
+            pos_hint: {"center_x": 0.5, "center_y": 1}
+            spacing: dp(10)
+            padding: dp(20)
+            md_bg_color: [1, 1, 1, 0.05]
+
 
         MDLabel:
             id: simbolo_label
-            pos_hint: {"center_x": 0.2, "center_y": 0.79}
+            pos_hint: {"center_x": 0.2, "center_y": 0.73}
+            font_size: self.width * 0.05
             halign: "center"
             theme_text_color: "Custom"
             text_color: [1, 1, 1, 0.8]
-            font_name:"Poppins-SemiBold.ttf"
-            font_size: dp(20)  # Use the dp function for font size
+            font_name:"GraphikCompact-Medium-Trial.otf"
 
         MDLabel:
             id: nome_label
-            pos_hint: {"center_x": 0.5, "center_y": 0.96}
+            size_hint: (0.8, 0.1)
+            font_size: self.width * 0.07
+            pos_hint: {"center_x": 0.5, "center_y": 0.95}
             halign: "center"
             theme_text_color: "Custom"
             text_color: [1, 1, 1, 1]
-            font_size: dp(30)
             bold: True
+            font_name: "GraphikCompact-Medium-Trial.otf"
 
         MDLabel:
             id: cotacao_label
-            pos_hint: {"center_x": 0.82, "center_y": 0.85}
+            font_size: self.width * 0.09
+            pos_hint: {"center_x": 0.89, "center_y": 0.85}
             halign: "left"
             theme_text_color: "Custom"
             text_color: [0, 1, 0, 1]
-            font_size: dp(65)
             bold: True
 
         MDLabel:
             id: preco_anterior_label
+            font_size: self.width * 0.025
             pos_hint: {"center_x": 0.40, "center_y": 0.726}
             halign: "right"
             theme_text_color: "Custom"
-            text_color: [1, 1, 1, 1]
-            font_size: dp(12)
+            text_color: 'green'
+            font_name: "GraphikCompact-Medium-Trial.otf"
+
 
         MDLabel:
             id: volume_label
+            font_size: self.width * 0.025
             pos_hint: {"center_x": 0.40, "center_y": 0.70}
             halign: "right"
             theme_text_color: "Custom"
             text_color: [1, 1, 1, 1]
-            font_size: dp(12)
+            font_name: "GraphikCompact-Medium-Trial.otf"
 
-        MDTextButton:
-            text: "voltar"
-            pos_hint: {"center_x": .5, "center_y": .09}
-            halign: "center"
-            size_hint: (0.8, 0.1)
-            theme_text_color: "Custom"
-            font_name: "Poppins-SemiBold.ttf"
-            font_size: self.width * 0.04
-            text_color: [1, 1, 1, 1]
-            on_release:
-                root.manager.current = 'splash'
+        Image:
+            source: "images/esquerda.png"
+            size_hint: None, None
+            size: dp(60), dp(60)
+            pos_hint: {"left": 0.99, "top": 0.99}
+
+            on_touch_down:
+                root.manager.current = 'splash' if self.collide_point(*args[1].pos) else None
+
 
         MDBoxLayout:
             orientation: 'vertical'
             size_hint: 0.8, 0.5
-            pos_hint: {"center_x": 0.5, "center_y": 0.4}
+            pos_hint: {"center_x": 0.45, "center_y": 0.4}
             spacing: dp(10)
             padding: dp(20)
-            md_bg_color: [1, 1, 1, 0.10]
-            radius: [dp(10), dp(10), dp(10), dp(10)]
 
-        MDBoxLayout:
-            orientation: 'vertical'
-            size_hint: 0.21, 0.15
-            pos_hint: {"center_x": 0.2, "center_y": 0.85}
-            spacing: dp(10)
-            padding: dp(20)
-            md_bg_color: [1, 1, 1, 0.10]
-            radius: [dp(10), dp(10), dp(10), dp(10)]
 
+            # Adicionando um layout para o gráfico
+            id: graph_layout
         Image:
             id: add_button
             source: "images/add.png"
-            size_hint: None, None
-            size: dp(40), dp(40)
-            pos_hint: {"right":0.90, "top": 0.85}
-
+            size_hint: 0.08, 0.08
+            pos_hint: {"right": 0.90, "top": 0.85}
+            allow_stretch: True
+            keep_ratio: True
+            
             on_touch_down:
                 app.botao_add_clicado() if self.collide_point(*args[1].pos) else None
+
+
+
 
 <ThirdScreen>:
     name: 'third'
@@ -180,14 +179,14 @@
             source: 'images/bg.png'
             pos: self.pos
             size: self.size
-            allow_stretch: True  # Permitir esticar a imagem para preencher o widget
-            keep_ratio: False   # Não manter a proporção original ao esticar
+            allow_stretch: True
+            keep_ratio: False
 
         MDLabel:
-            text:"Favoritos"
+            text: "Favoritos"
             pos_hint: {"center_x": 0.50, "center_y": 0.90}
             halign: "center"
-            font_name: "Poppins-SemiBold.ttf"
+            font_name: "GraphikCompact-Medium-Trial.otf"
             theme_text_color: "Custom"
             text_color: [1, 1, 1, 1]
             font_size: dp(40)
@@ -202,26 +201,90 @@
             md_bg_color: [1, 1, 1, 0.10]
             radius: [dp(10), dp(10), dp(10), dp(10)]
 
+            MDCard:
+                orientation: "vertical"
+                size_hint_y: None
+                height: "120dp"
+                pos_hint: {"center_x": 0.5}
+                elevation: 10
 
-        MDTextButton:
-            text: "voltar"
-            pos_hint: {"center_x": .5, "center_y": .09}
-            halign: "center"
-            size_hint: (0.8, 0.1)
-            theme_text_color: "Custom"
-            font_name: "Poppins-SemiBold.ttf"
-            font_size: self.width * 0.04
-            text_color: [1, 1, 1, 1]
-            on_release:
-                root.manager.current = 'splash'
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    padding: dp(10)
 
+                    MDIconButton:
+                        icon: "star"
+                        theme_text_color: "Custom"
+                        text_color: [1, 1, 1, 1]
 
-        MDScrollView:
-            size_hint: (1, 0.6)
-            pos_hint: {"center_x": 0.5, "center_y": 0.45}
-            
-            BoxLayout:
-                id: lista_layout
-                orientation: 'vertical'
-                spacing: dp(10)
-                padding: dp(10)
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: dp(5)
+
+                        MDLabel:
+                            text: "Título do Item 1"
+                            font_name: "GraphikCompact-Medium-Trial.otf"
+                            font_size: dp(18)
+                            theme_text_color: "Custom"
+                            text_color: [1, 1, 1, 1]
+
+                        MDLabel:
+                            text: "Descrição do Item 1"
+                            font_size: dp(14)
+                            theme_text_color: "Custom"
+                            text_color: [1, 1, 1, 0.7]
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    md_bg_color: [1, 1, 1, 0.5]
+
+            MDCard:
+                orientation: "vertical"
+                size_hint_y: None
+                height: "120dp"
+                pos_hint: {"center_x": 0.5}
+                elevation: 10
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: dp(10)
+                    padding: dp(10)
+
+                    MDIconButton:
+                        icon: "star"
+                        theme_text_color: "Custom"
+                        text_color: [1, 1, 1, 1]
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: dp(5)
+
+                        MDLabel:
+                            text: "Título do Item 2"
+                            font_name: "GraphikCompact-Medium-Trial.otf"
+                            font_size: dp(18)
+                            theme_text_color: "Custom"
+                            text_color: [1, 1, 1, 1]
+
+                        MDLabel:
+                            text: "Descrição do Item 2"
+                            font_size: dp(14)
+                            theme_text_color: "Custom"
+                            text_color: [1, 1, 1, 0.7]
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(1)
+                    md_bg_color: [1, 1, 1, 0.5]
+
+        Image:
+            source: "images/esquerda.png"
+            size_hint: None, None
+            size: dp(60), dp(60)
+            pos_hint: {"left": 0.99, "top": 0.99}
+
+            on_touch_down:
+                root.manager.current = 'splash' if self.collide_point(*args[1].pos) else None
+
